@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Will you be my Valentine?</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-pink: #fff0f6;
+      --accent: #ff6b9d;
+      --accent-hover: #ff4d85;
+      --text-main: #4a4a4a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      background: var(--bg-pink);
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+      padding: 16px;
+    }
+
+    /* BACKGROUND FLOATING HEARTS */
+    .bg-heart {
+      position: absolute;
+      color: rgba(255, 107, 157, 0.2);
+      user-select: none;
+      pointer-events: none;
+      animation: floatUp var(--d) linear infinite;
+      font-size: var(--s);
+      z-index: 0;
+      top: 100%;
+    }
+
+    @keyframes floatUp {
+      to { transform: translateY(-110vh) rotate(360deg); }
+    }
+
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .card {
+      position: relative;
+      z-index: 10;
+      width: min(450px, 90vw);
+      padding: 40px 20px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-radius: 30px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    /* THE CAT */
+    .art {
+      width: 200px;
+      height: auto;
+      margin: 0 auto 20px;
+      display: block;
+      filter: drop-shadow(0 10px 15px rgba(255, 107, 157, 0.2));
+      animation: squish 3s ease-in-out infinite;
+    }
+
+    @keyframes squish {
+      0%, 100% { transform: scale(1, 1); }
+      50% { transform: scale(1.05, 0.95); }
+    }
+
+    h1 {
+      font-size: 28px;
+      color: var(--text-main);
+      margin: 10px 0;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #888;
+      margin-bottom: 30px;
+    }
+
+    .button-zone {
+      position: relative;
+      height: 120px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 14px 34px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #yesBtn {
+      left: 15%;
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+      z-index: 20;
+    }
+
+    #yesBtn:active { transform: translateY(-50%) scale(0.9); }
+
+    #noBtn {
+      left: 60%;
+      background: #f0f0f0;
+      color: #666;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+    }
+
+    /* RESULT */
+    .result {
+      display: none;
+      animation: popOpen 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popOpen {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .fireworks {
+      width: 100%;
+      max-width: 280px;
+      border-radius: 20px;
+      margin-top: 20px;
+    }
+
+    .heart-icon { animation: heartBeat 1.2s infinite; }
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confettiCanvas"></canvas>
+
+  <main class="card">
+    <div id="invite-screen">
+      <svg class="art" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="fur" x1="0" x2="1"><stop offset="0" stop-color="#ffd6b0"/><stop offset="1" stop-color="#ffb37a"/></linearGradient>
+          <linearGradient id="heartGrad" x1="0" x2="1"><stop offset="0" stop-color="#ff5c8a"/><stop offset="1" stop-color="#ff2f6d"/></linearGradient>
+        </defs>
+        <path class="heart-icon" d="M240 40 C240 25 260 20 272 32 C284 20 304 25 304 40 C304 65 272 80 272 94 C272 80 240 65 240 40Z" fill="url(#heartGrad)"/>
+        <circle cx="160" cy="135" r="70" fill="url(#fur)"/>
+        <path d="M115 85 L90 35 L135 70 Z" fill="#ffb37a"/><path d="M205 85 L230 35 L185 70 Z" fill="#ffb37a"/>
+        <circle cx="140" cy="135" r="7"/><circle cx="180" cy="135" r="7"/>
+        <path d="M160 145 C155 145 150 150 150 154 C150 158 155 162 160 162 C165 162 170 158 170 154 C170 150 165 145 160 145Z" fill="#ff7aa2"/>
+        <path d="M160 162 C155 170 145 170 142 168" stroke="#333" stroke-width="2" fill="none"/>
+        <path d="M160 162 C165 170 175 170 178 168" stroke="#333" stroke-width="2" fill="none"/>
+      </svg>
+
+      <h1>Misbah! Will you be my Valentine? ❤️</h1>
+      <div class="subtitle">PLEASE 🥺</div>
+      
+      <section class="button-zone" id="zone">
+        <button id="yesBtn">Yes!</button>
+        <button id="noBtn">No</button>
+      </section>
+    </div>
+
+    <section class="result" id="result">
+      <h1 style="color: var(--accent); font-size: 40px;">YAY! 🎉</h1>
+      <p style="font-weight: 600; color: #444;">Best decision ever! ❤️</p>
+      <p style="font-weight: 600; color: #444;">Chapli! No pe click kar rahi thi 😒.... NO IS NOT AN OPTION 🙂‍↔️😝😝</p>
+      <img class="fireworks" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExczA2aWJteHY4OXg2OWxiZWppMXZyeTYya3k2cm5ydDJnaG13OWI2biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vqvmGLZdqxNzCtVlR3/giphy.gif" alt="Celebration" />
+    </section>
+  </main>
+
+  <script>
+    // 1. GENERATE BACKGROUND HEARTS
+    for (let i = 0; i < 20; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'bg-heart';
+      heart.innerHTML = '❤️';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.setProperty('--d', (Math.random() * 5 + 5) + 's');
+      heart.style.setProperty('--s', (Math.random() * 10 + 15) + 'px');
+      heart.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(heart);
+    }
+
+    const zone = document.getElementById("zone");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const result = document.getElementById("result");
+    const inviteScreen = document.getElementById("invite-screen");
+    const confettiCanvas = document.getElementById("confettiCanvas");
+
+    function resizeConfettiCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      confettiCanvas.width = window.innerWidth * dpr;
+      confettiCanvas.height = window.innerHeight * dpr;
+    }
+    window.addEventListener("resize", resizeConfettiCanvas);
+    resizeConfettiCanvas();
+
+    const confettiInstance = confetti.create(confettiCanvas, { resize: false, useWorker: true });
+
+    function launchCelebration() {
+      const duration = 5 * 1000;
+      const animationEnd = Date.now() + duration;
+
+      (function frame() {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) return;
+        confettiInstance({
+          particleCount: 3,
+          spread: 60,
+          origin: { x: Math.random(), y: Math.random() - 0.2 },
+          colors: ['#ff6b9d', '#ff9bb5', '#ffffff'],
+          scalar: 2.5,
+          gravity: 0.8
+        });
+        requestAnimationFrame(frame);
+      })();
+    }
+
+    let yesScale = 1;
+    function moveNo(px, py) {
+      const z = zone.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
+      let dx = (b.left + b.width / 2) - px;
+      let dy = (b.top + b.height / 2) - py;
+      let mag = Math.hypot(dx, dy) || 1;
+
+      let newLeft = (b.left - z.left) + (dx / mag) * 120;
+      let newTop  = (b.top - z.top) + (dy / mag) * 120;
+
+      newLeft = Math.max(0, Math.min(z.width - b.width, newLeft));
+      newTop  = Math.max(0, Math.min(z.height - b.height, newTop));
+
+      noBtn.style.left = newLeft + "px";
+      noBtn.style.top = newTop + "px";
+      
+      yesScale = Math.min(3.5, yesScale + 0.15);
+      yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
+    }
+
+    zone.addEventListener("pointermove", e => {
+      const b = noBtn.getBoundingClientRect();
+      const d = Math.hypot((b.left + b.width / 2) - e.clientX, (b.top + b.height / 2) - e.clientY);
+      if (d < 120) moveNo(e.clientX, e.clientY);
+    });
+
+    noBtn.addEventListener("click", () => yesBtn.click());
+
+    yesBtn.addEventListener("click", () => {
+      inviteScreen.style.display = "none";
+      result.style.display = "block";
+      launchCelebration();
+    });
+  </script>
+</body>
+</html>
+
+
+
